@@ -1,0 +1,26 @@
+[project]
+name = "bloomberg-a2a"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Samuel Seng", email = "djsamseng@gmail.com" }
+]
+requires-python = ">=3.10, <3.13"
+dependencies = [
+    "bloomberg-mcp",
+]
+
+[project.scripts]
+bloomberg-a2a = "bloomberg_a2a:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[[tool.uv.index]]
+name = "blpapi"
+url = "https://blpapi.bloomberg.com/repository/releases/python/simple/"
+
+[tool.uv.sources]
+bloomberg-mcp = { git = "https://github.com/djsamseng/bloomberg-mcp" }

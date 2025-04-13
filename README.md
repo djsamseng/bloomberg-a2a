@@ -20,7 +20,7 @@ uv add git+https://github.com/djsamseng/bloomberg-a2a
 
 ## Run the A2A Agent
 ```bash
-python3 -m bloomberg_a2a
+uv run bloomberg-a2a
 ```
 
 

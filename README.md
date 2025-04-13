@@ -1,6 +1,8 @@
 # Bloomberg A2A
 
-An [A2A](https://github.com/google/A2A) agent providing financial data from Bloomberg blpapi
+An [A2A](https://github.com/google/A2A) agent providing financial data from Bloomberg blpapi.
+
+Leverages [Bloomberg-MCP](https://github.com/djsamseng/bloomberg-mcp) as the data provider.
 
 ## Installation
 ### Using [UV](https://docs.astral.sh/uv/getting-started/installation/)

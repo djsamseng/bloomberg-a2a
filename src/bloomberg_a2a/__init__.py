@@ -26,6 +26,9 @@ async def run_ollama(session: ClientSession, ollama_base_url: str, ollama_model:
     temperature=0.2
   )
   tools = await load_mcp_tools(session)
+  # TODO: Create a tool to query relevant tickers
+  # TODO: Create a tool to query relevant fields
+  # TODO: System prompt to have the agent retrieve tickers and fields for the request
   agent = create_react_agent(ollama_chat_llm, tools)
 
   prompt = "What is today's price for AAPL US Equity?"
@@ -33,7 +36,7 @@ async def run_ollama(session: ClientSession, ollama_base_url: str, ollama_model:
     {"messages": prompt }
   )
   print("Prompt:", prompt)
-  print("Response:", agent_response["messages"][::-1])
+  print("Response:", agent_response["messages"])
 
 async def run():
   args = parse_args()

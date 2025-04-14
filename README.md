@@ -40,6 +40,11 @@ ollama pull llama3.2:1b
 ```bash
 uv run bloomberg-a2a --ollama-host http://127.0.0.1:11434 --ollama-model llama3.2:1b
 ```
+- With `qwq` as the LLM you will see the agent call bloomberg-mcp bdp correctly
+```
+INFO     Processing request of type CallToolRequest
+{'name': 'bdp', 'args': {'flds': ['PX_LAST'], 'kwargs': {}, 'tickers': ['AAPL US Equity']}, 'type': 'tool_call'}
+```
 
 
 

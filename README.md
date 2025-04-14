@@ -17,11 +17,30 @@ url = "https://blpapi.bloomberg.com/repository/releases/python/simple/"
 uv add git+https://github.com/djsamseng/bloomberg-a2a
 ```
 
-
 ## Run the A2A Agent
 ```bash
 uv run bloomberg-a2a
 ```
+
+## Examples
+### Run with ollama
+- First [install ollama](https://ollama.com/download)
+- Run the ollama server
+  - note you may have to `systemctl stop ollama` if you run into [Error: listen tcp 127.0.0.1:11434: bind: address already in use](https://github.com/ollama/ollama/issues/707#issuecomment-1752096265)
+```bash
+OLLAMA_CONTEXT_LENGTH=8192 ollama serve
+```
+- Pull down the model `llama3.2:1b`
+  - or replace with a model that fits on your GPU that has the `tools` tag
+  - Consider `qwq` for an RTX 3090 24GB GPU
+```bash
+ollama pull llama3.2:1b
+```
+- Run the agent. Replace host and port with the value of OLLAMA_HOST printed from running `ollama serve` from above
+```bash
+uv run bloomberg-a2a --ollama-host http://127.0.0.1:11434 --ollama-model llama3.2:1b
+```
+
 
 
 ## Development

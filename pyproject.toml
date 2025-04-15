@@ -6,9 +6,10 @@ readme = "README.md"
 authors = [
     { name = "Samuel Seng", email = "djsamseng@gmail.com" }
 ]
-requires-python = ">=3.10, <3.13"
+requires-python = ">=3.12, <3.13"
 dependencies = [
     "bloomberg-mcp",
+    "google-a2a",
     "langchain>=0.3.23",
     "langchain-core>=0.3.51",
     "langchain-mcp-adapters>=0.0.7",
@@ -29,3 +30,4 @@ url = "https://blpapi.bloomberg.com/repository/releases/python/simple/"
 
 [tool.uv.sources]
 bloomberg-mcp = { git = "https://github.com/djsamseng/bloomberg-mcp" }
+google-a2a = { git = "https://github.com/djsamseng/A2A", subdirectory = "samples/python", branch = "prefixPythonPackage" }

@@ -12,6 +12,8 @@ from langchain_ollama import ChatOllama
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langgraph.prebuilt import create_react_agent
 
+from bloomberg_a2a.blp_a2a_task_manager import BlpA2ATaskManager
+
 def parse_args():
   parser = argparse.ArgumentParser()
   parser.add_argument("--ollama-host", type=str, help="Host address for ollama. Ex: http://127.0.0.1:11434")

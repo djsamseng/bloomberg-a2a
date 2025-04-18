@@ -1,4 +1,5 @@
 
+import asyncio
 import logging
 
 import typing
@@ -25,6 +26,7 @@ from google_a2a.common.types import (
   Task,
   TaskState,
   TaskStatus,
+  TaskStatusUpdateEvent,
   TextPart,
 )
 
@@ -85,6 +87,7 @@ class BlpA2ATaskManager(InMemoryTaskManager):
       )
       return SendTaskResponse(id=request.id, result=task)
     except Exception as e:
+      logger.error(f"Failed to process on_send_task: {str(e)}")
       return SendTaskResponse(
         id=request.id,
         error=JSONRPCError(
@@ -93,9 +96,27 @@ class BlpA2ATaskManager(InMemoryTaskManager):
         )
       )
 
-  async def on_send_task_subscribe(self, request: SendTaskStreamingRequest) -> AsyncIterable[SendTaskStreamingResponse] | JSONRPCResponse:
-    # Not implemented as AgentCapabilities set to streaming=False
-    return await super().on_send_task_subscribe(request)
+  async def on_send_task_subscribe(self, request: SendTaskStreamingRequest) -> typing.Union[AsyncIterable[SendTaskStreamingResponse], JSONRPCResponse]:
+    try:
+      await self.upsert_task(request.params)
+      task_id = request.params.id
+      sse_event_queue = await self.setup_sse_consumer(task_id=task_id)
+      asyncio.create_task(self._stream_ollama_responses(request))
+      # This is actually the correct return signature and should not be awaited
+      return self.dequeue_events_for_sse(
+        request_id=request.id,
+        task_id=task_id,
+        sse_event_queue=sse_event_queue
+      ) # type: ignore
+    except Exception as e:
+      logger.error(f"Failed to process on_send_task_subscribe: {str(e)}")
+      return JSONRPCResponse(
+        id=request.id,
+        error=JSONRPCError(
+          code=-32000,
+          message=f"Server error: {str(e)}"
+        )
+      )
 
   async def _update_task(
     self,
@@ -123,3 +144,76 @@ class BlpA2ATaskManager(InMemoryTaskManager):
       )
     ]
     return task
+
+  async def _stream_ollama_responses(self, request: SendTaskStreamingRequest):
+    task_id = request.params.id
+    if self.ollama_agent is None:
+      task_status = TaskStatus(
+        state=TaskState.CANCELED,
+        message=Message(
+          role="agent",
+          parts=[
+            typing.cast(Part, {
+              "type": "text",
+              "text": "No ollama agent running to process the request"
+            })
+          ]
+        )
+      )
+      task_update_event = TaskStatusUpdateEvent(
+        id=task_id,
+        status=task_status,
+        final=True,
+      )
+      await self.enqueue_events_for_sse(
+        task_id=task_id,
+        task_update_event=task_update_event,
+      )
+      return
+
+    try:
+      received_text = typing.cast(TextPart, request.params.message.parts[0]).text
+      response_text = await run_ollama(ollama_agent=self.ollama_agent, prompt=received_text)
+      task_status = TaskStatus(
+        state=TaskState.COMPLETED,
+        message=Message(
+          role="agent",
+          parts=[
+            typing.cast(Part, {
+              "type": "text",
+              "text": response_text,
+            })
+          ]
+        )
+      )
+      task_update_event = TaskStatusUpdateEvent(
+        id=task_id,
+        status=task_status,
+        final=True,
+      )
+      await self.enqueue_events_for_sse(
+        task_id=task_id,
+        task_update_event=task_update_event,
+      )
+    except Exception as e:
+      task_status = TaskStatus(
+        state=TaskState.FAILED,
+        message=Message(
+          role="agent",
+          parts=[
+            typing.cast(Part, {
+              "type": "text",
+              "text": f"An error occurred streaming responses: {str(e)}"
+            })
+          ]
+        )
+      )
+      task_update_event = TaskStatusUpdateEvent(
+        id=task_id,
+        status=task_status,
+        final=True,
+      )
+      await self.enqueue_events_for_sse(
+        task_id=task_id,
+        task_update_event=task_update_event,
+      )

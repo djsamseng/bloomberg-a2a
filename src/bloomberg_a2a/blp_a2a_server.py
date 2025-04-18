@@ -16,7 +16,7 @@ def run_server(args: argparse.Namespace):
   ollama_model = args.ollama_model
 
   capabilities = AgentCapabilities(
-    streaming=False,
+    streaming=True,
   )
   skill = AgentSkill(
     id="blp_a2a_get_ticker_data",

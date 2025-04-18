@@ -15,7 +15,9 @@ def run_server(args: argparse.Namespace):
   ollama_base_url = args.ollama_host
   ollama_model = args.ollama_model
 
-  capabilities = AgentCapabilities()
+  capabilities = AgentCapabilities(
+    streaming=False,
+  )
   skill = AgentSkill(
     id="blp_a2a_get_ticker_data",
     name="Get ticker data from Bloomberg",
@@ -28,8 +30,8 @@ def run_server(args: argparse.Namespace):
     description="Helps retrieve data from Bloomberg",
     url=f"http://{host}:{port}",
     version="0.1.0",
-    defaultInputModes=["text", "text/plain"],
-    defaultOutputModes=[],
+    defaultInputModes=BlpA2ATaskManager.INPUT_MODES,
+    defaultOutputModes=BlpA2ATaskManager.OUTPUT_MODES,
     capabilities=capabilities,
     skills=[skill]
   )

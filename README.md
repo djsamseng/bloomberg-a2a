@@ -6,18 +6,12 @@ Leverages [Bloomberg-MCP](https://github.com/djsamseng/bloomberg-mcp) as the dat
 
 ## Installation
 ### Using [UV](https://docs.astral.sh/uv/getting-started/installation/)
-- First add an index to bloomberg blpapi in `pyproject.toml`
-```
-[[tool.uv.index]]
-name = "blpapi"
-url = "https://blpapi.bloomberg.com/repository/releases/python/simple/"
-```
 
 ```bash
 uv add git+https://github.com/djsamseng/bloomberg-a2a
 ```
 
-## Run the A2A Agent
+## Run the A2A Agent without a model
 ```bash
 uv run bloomberg-a2a
 ```
@@ -40,11 +34,22 @@ ollama pull llama3.2:1b
 ```bash
 uv run bloomberg-a2a --ollama-host http://127.0.0.1:11434 --ollama-model llama3.2:1b
 ```
+```bash
+uv run bloomberg-a2a --ollama-host http://127.0.0.1:11434 --ollama-model qwq
+```
+- Run the test client to interact with the A2A server
+```bash
+uv run google-a2a-cli --agent http://127.0.0.1:8000
+```
 - With `qwq` as the LLM you will see the agent call bloomberg-mcp bdp correctly
 ```
-INFO     Processing request of type CallToolRequest
-{'name': 'bdp', 'args': {'flds': ['PX_LAST'], 'kwargs': {}, 'tickers': ['AAPL US Equity']}, 'type': 'tool_call'}
+=========  starting a new task ========
+
+What do you want to send to the agent? (:q or quit to exit): What is the price of IBM?
+
+{"role":"agent","parts":[{"type":"text","text":"<think>\nOkay, the user asked for the price of IBM, and I tried using the bdp function. But there was an error: ClosedResourceError() ... typically indicates a disconnected Bloomberg session or invalid API context. Please ensure:\n\n1. Bloomberg Terminal/desktop is running\n2. Python/blpapi session is active\n3. Proper Bloomberg API authentication"}]}
 ```
+- Note: The test client may time out while the ollama server loads a large model. Rerun the test client after the ollama server finishes loading the model weights into memory.
 
 
 

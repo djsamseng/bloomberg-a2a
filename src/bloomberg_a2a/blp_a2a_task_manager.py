@@ -6,7 +6,6 @@ import typing
 from typing import AsyncIterable
 
 from mcp import ClientSession, StdioServerParameters
-from mcp import types as mcp_types
 from mcp.client.stdio import stdio_client
 
 from langgraph.graph.graph import CompiledGraph
@@ -66,10 +65,10 @@ class BlpA2ATaskManager(InMemoryTaskManager):
           )
         else:
           resources = await session.list_resources()
-          print("Available resources:", resources)
+          logging.info("Available resources:", resources)
 
           tools = await session.list_tools()
-          print("Available tools:", tools)
+          logging.info("Available tools:", tools)
 
 
   async def on_send_task(self, request: SendTaskRequest) -> SendTaskResponse:
@@ -79,7 +78,9 @@ class BlpA2ATaskManager(InMemoryTaskManager):
       received_text = typing.cast(TextPart, request.params.message.parts[0]).text
       response_text = f"No AI agent running to process the request"
       if self.ollama_agent is not None:
-        response_text = await run_ollama(ollama_agent=self.ollama_agent, prompt=received_text)
+        async for part in run_ollama(ollama_agent=self.ollama_agent, prompt=received_text):
+          # Overwrite, thus only sending the last
+          response_text = part
       task = await self._update_task(
         task_id=task_id,
         task_state=TaskState.COMPLETED,
@@ -173,18 +174,34 @@ class BlpA2ATaskManager(InMemoryTaskManager):
 
     try:
       received_text = typing.cast(TextPart, request.params.message.parts[0]).text
-      response_text = await run_ollama(ollama_agent=self.ollama_agent, prompt=received_text)
+      async for part in run_ollama(ollama_agent=self.ollama_agent, prompt=received_text):
+        # Send each iteration of what the AI model is thinking
+        response_text = part
+        task_status = TaskStatus(
+          state=TaskState.WORKING,
+          message=Message(
+            role="agent",
+            parts=[
+              typing.cast(Part, {
+                "type": "text",
+                "text": response_text,
+              })
+            ]
+          )
+        )
+        task_update_event = TaskStatusUpdateEvent(
+          id=task_id,
+          status=task_status,
+          final=False,
+        )
+        await self.enqueue_events_for_sse(
+          task_id=task_id,
+          task_update_event=task_update_event,
+        )
+
       task_status = TaskStatus(
         state=TaskState.COMPLETED,
-        message=Message(
-          role="agent",
-          parts=[
-            typing.cast(Part, {
-              "type": "text",
-              "text": response_text,
-            })
-          ]
-        )
+        message=None
       )
       task_update_event = TaskStatusUpdateEvent(
         id=task_id,
@@ -196,6 +213,7 @@ class BlpA2ATaskManager(InMemoryTaskManager):
         task_update_event=task_update_event,
       )
     except Exception as e:
+      logging.error(f"Failed in _stream_ollama_responses: {str(e)}")
       task_status = TaskStatus(
         state=TaskState.FAILED,
         message=Message(

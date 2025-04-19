@@ -1,19 +1,21 @@
-# Bloomberg A2A
+# BLPAPI-A2A
 
 An [A2A](https://github.com/google/A2A) agent providing financial data from Bloomberg blpapi.
 
-Leverages [Bloomberg-MCP](https://github.com/djsamseng/bloomberg-mcp) as the data provider.
+Leverages [BLPAPI-MCP](https://github.com/djsamseng/blpapi-mcp) as the data provider.
+
+Note: A Bloomberg Terminal must be running (BBComm must be accessible) for data access.
 
 ## Installation
 ### Using [UV](https://docs.astral.sh/uv/getting-started/installation/)
 
 ```bash
-uv add git+https://github.com/djsamseng/bloomberg-a2a
+uv add git+https://github.com/djsamseng/blpapi-a2a
 ```
 
 ## Run the A2A Agent without a model
 ```bash
-uv run bloomberg-a2a
+uv run blpapi-a2a
 ```
 
 ## Examples
@@ -32,16 +34,16 @@ ollama pull llama3.2:1b
 ```
 - Run the agent. Replace host and port with the value of OLLAMA_HOST printed from running `ollama serve` from above
 ```bash
-uv run bloomberg-a2a --ollama-host http://127.0.0.1:11434 --ollama-model llama3.2:1b
+uv run blpapi-a2a --ollama-host http://127.0.0.1:11434 --ollama-model llama3.2:1b
 ```
 ```bash
-uv run bloomberg-a2a --ollama-host http://127.0.0.1:11434 --ollama-model qwq
+uv run blpapi-a2a --ollama-host http://127.0.0.1:11434 --ollama-model qwq
 ```
 - Run the test client to interact with the A2A server
 ```bash
 uv run google-a2a-cli --agent http://127.0.0.1:8000
 ```
-- With `qwq` as the LLM you will see the agent call bloomberg-mcp bdp correctly
+- With `qwq` as the LLM you will see the agent call blpapi-mcp bdp correctly
 ```
 =========  starting a new task ========
 
@@ -61,7 +63,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 2. Clone this repository
 ```bash
-git clone https://github.com/djsamseng/bloomberg-a2a
+git clone https://github.com/djsamseng/blpapi-a2a
 ```
 3. Setup the venv
 ```bash
@@ -70,5 +72,8 @@ source .venv/bin/activate
 ```
 4. Run the A2A agent
 ```bash
-uv run bloomberg-a2a
+uv run blpapi-a2a
 ```
+
+## Trademark Note
+This project not affiliated with Bloomberg Finance L.P. The use of the name Bloomberg is only descriptive as towards what this package is used with.

@@ -29,7 +29,7 @@ from google_a2a.common.types import (
   TextPart,
 )
 
-from bloomberg_a2a.blp_a2a_agent import create_ollama_agent, run_ollama
+from blpapi_a2a.blp_a2a_agent import create_ollama_agent, run_ollama
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ class BlpA2ATaskManager(InMemoryTaskManager):
   async def setup_tools(self, ollama_base_url: str, ollama_model: str):
     server_params = StdioServerParameters(
     command="uv",
-    args=["run", "bloomberg-mcp"],
+    args=["run", "blpapi-mcp"],
     env=None,
   )
 

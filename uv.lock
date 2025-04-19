@@ -99,11 +99,23 @@ wheels = [
 ]
 
 [[package]]
-name = "bloomberg-a2a"
+name = "blpapi"
+version = "3.25.3"
+source = { registry = "https://blpapi.bloomberg.com/repository/releases/python/simple/" }
+sdist = { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3.tar.gz", hash = "sha256:c7a5d70fe1ca4eefc76f393c0ff6ed0bf43a5e86b97d88f93ef07ec50cdb0c22" }
+wheels = [
+    { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3-py3-none-macosx_11_0_arm64.whl", hash = "sha256:e24ba182b98c208911df6dfb6b3f6a8584cc7ae6604ddcdfa6594bd8b275b15e" },
+    { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3-py3-none-manylinux2014_x86_64.whl", hash = "sha256:d86f298deb85b6273646fa3df6cad00e581221dc00fbd3883739dde55659bcd4" },
+    { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3-py3-none-win32.whl", hash = "sha256:e0e9e8df8a3fa9a3daae8863f9efebe8e47b2d38c78cdaaec8886c7acf8c5da3" },
+    { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3-py3-none-win_amd64.whl", hash = "sha256:549c00c52799999ab56a708ca6fb03dcb98c5cdc1a5c0350e2129e1cf7bf2c0e" },
+]
+
+[[package]]
+name = "blpapi-a2a"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "bloomberg-mcp" },
+    { name = "blpapi-mcp" },
     { name = "google-a2a" },
     { name = "langchain" },
     { name = "langchain-core" },
@@ -114,7 +126,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bloomberg-mcp", git = "https://github.com/djsamseng/bloomberg-mcp" },
+    { name = "blpapi-mcp", git = "https://github.com/djsamseng/blpapi-mcp" },
     { name = "google-a2a", git = "https://github.com/djsamseng/A2A?subdirectory=samples%2Fpython&branch=prefixPythonPackage" },
     { name = "langchain", specifier = ">=0.3.23" },
     { name = "langchain-core", specifier = ">=0.3.51" },
@@ -124,25 +136,13 @@ requires-dist = [
 ]
 
 [[package]]
-name = "bloomberg-mcp"
+name = "blpapi-mcp"
 version = "0.1.0"
-source = { git = "https://github.com/djsamseng/bloomberg-mcp#bafb63a3e0426b2af37eaa0a058edd23d55f6867" }
+source = { git = "https://github.com/djsamseng/blpapi-mcp#5870e1e7ae48a440f1f8c3adfc76448a986c2a36" }
 dependencies = [
     { name = "blpapi" },
     { name = "mcp", extra = ["cli"] },
     { name = "xbbg" },
-]
-
-[[package]]
-name = "blpapi"
-version = "3.25.3"
-source = { registry = "https://blpapi.bloomberg.com/repository/releases/python/simple/" }
-sdist = { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3.tar.gz", hash = "sha256:c7a5d70fe1ca4eefc76f393c0ff6ed0bf43a5e86b97d88f93ef07ec50cdb0c22" }
-wheels = [
-    { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3-py3-none-macosx_11_0_arm64.whl", hash = "sha256:e24ba182b98c208911df6dfb6b3f6a8584cc7ae6604ddcdfa6594bd8b275b15e" },
-    { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3-py3-none-manylinux2014_x86_64.whl", hash = "sha256:d86f298deb85b6273646fa3df6cad00e581221dc00fbd3883739dde55659bcd4" },
-    { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3-py3-none-win32.whl", hash = "sha256:e0e9e8df8a3fa9a3daae8863f9efebe8e47b2d38c78cdaaec8886c7acf8c5da3" },
-    { url = "https://blpapi.bloomberg.com/repository/releases/python/blpapi-3.25.3-py3-none-win_amd64.whl", hash = "sha256:549c00c52799999ab56a708ca6fb03dcb98c5cdc1a5c0350e2129e1cf7bf2c0e" },
 ]
 
 [[package]]

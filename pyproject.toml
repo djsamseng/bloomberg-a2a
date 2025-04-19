@@ -1,5 +1,5 @@
 [project]
-name = "bloomberg-a2a"
+name = "blpapi-a2a"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -8,7 +8,7 @@ authors = [
 ]
 requires-python = ">=3.12, <3.13"
 dependencies = [
-    "bloomberg-mcp",
+    "blpapi-mcp",
     "google-a2a",
     "langchain>=0.3.23",
     "langchain-core>=0.3.51",
@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.scripts]
-bloomberg-a2a = "bloomberg_a2a:main"
+blpapi-a2a = "blpapi_a2a:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -29,5 +29,5 @@ name = "blpapi"
 url = "https://blpapi.bloomberg.com/repository/releases/python/simple/"
 
 [tool.uv.sources]
-bloomberg-mcp = { git = "https://github.com/djsamseng/bloomberg-mcp" }
+blpapi-mcp = { git = "https://github.com/djsamseng/blpapi-mcp" }
 google-a2a = { git = "https://github.com/djsamseng/A2A", subdirectory = "samples/python", branch = "prefixPythonPackage" }

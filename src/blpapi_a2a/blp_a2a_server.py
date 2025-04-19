@@ -5,7 +5,7 @@ import logging
 from google_a2a.common.server import A2AServer
 from google_a2a.common.types import AgentCard, AgentCapabilities, AgentSkill
 
-from bloomberg_a2a.blp_a2a_task_manager import BlpA2ATaskManager
+from blpapi_a2a.blp_a2a_task_manager import BlpA2ATaskManager
 
 logger = logging.getLogger(__name__)
 

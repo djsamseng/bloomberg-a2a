@@ -2,7 +2,7 @@
 
 import argparse
 
-from bloomberg_a2a.blp_a2a_server import run_server
+from blpapi_a2a.blp_a2a_server import run_server
 
 def parse_args():
   parser = argparse.ArgumentParser()
